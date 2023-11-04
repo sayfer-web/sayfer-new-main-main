@@ -19,7 +19,6 @@ export class AuthController {
     private readonly usersService: UsersService
   ) { }
 
-  @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   @Post('log-in')
   async logIn(
