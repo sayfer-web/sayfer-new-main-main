@@ -12,9 +12,12 @@ import { NewsModule } from './news/news.module';
 import { WalletModule } from './wallet/wallet.module';
 import { GamesModule } from './games/games.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronModule } from './cron/cron.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
@@ -41,6 +44,7 @@ import { TransactionsModule } from './transactions/transactions.module';
     WalletModule,
     GamesModule,
     TransactionsModule,
+    CronModule,
     // AuthModule,
   ],
   controllers: [AppController],

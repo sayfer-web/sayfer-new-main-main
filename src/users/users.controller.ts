@@ -8,6 +8,7 @@ import { User } from './decorators/user.decorator';
 import { Request } from "express"
 import { Roles } from './decorators/roles.decorator';
 import { Role } from './enums/role.enum';
+import { Interval } from '@nestjs/schedule';
 // import { User } from './entities/user.entity';
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
@@ -48,7 +49,7 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
-   
+
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User)
   @Post('/editRoles')
