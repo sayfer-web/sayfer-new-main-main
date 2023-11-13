@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -98,6 +98,14 @@ export class UsersService {
   
   update(id: number, updateGameDto: UpdateUserDto) {
     return `This action updates a #${id} game`;
+  }
+  
+  async updateBalance(username: string, amount: number) {
+    const user = await this.usersRepository.findOneBy({ username })
+    if(!user) return new BadRequestException('user doesnt exist')
+    // console.log('CHECK: ', user.tokenBalanceSFR, amount)
+    const newBalance = user.tokenBalanceSFR + amount
+    return await this.usersRepository.update(user.id, { tokenBalanceSFR: newBalance })
   }
 
   remove(id: number) {

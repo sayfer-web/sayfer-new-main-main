@@ -8,10 +8,45 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Post('depositRefresh')
-  create( ) { 
-      return this.transactionsService.depositRefresh() 
+  // Database Transactions
+  
+
+  @Get('findAllTransactions')
+  findAllTransactions() {
+    return this.transactionsService.findAll()
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    this.transactionsService.remove(id)
+  }
+  // Litecoin-CLI commands
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('getAllTransactions')
+  getAllTransaction() {
+    return this.transactionsService.getAllTransactions()
+  }
+  
+  // @UseGuards(JwtAuthGuard)
+  @Get('getTransactionsAfter/:count')
+  getLastTransactionsAfter(@Param('count') count: number) {
+    return this.transactionsService.getLastTransactions(count)
+  }
+
+  @Get('getNewAddressBy/:username')
+  getNewAddressByUsername(@Param('username') username: string) {
+    return this.transactionsService.getNewAddressByUsername(username)
+  }
+
+  @Get('loadGlobalWallet')
+  loadGlobalWallet() {
+    return this.transactionsService.loadGlobalWallet()
+  }
+
+  @Get('getBalances')
+  getBalances() {
+    return this.transactionsService.getBalances()
   }
 
   @Post('send/:id')
@@ -24,10 +59,10 @@ export class TransactionsController {
     return this.transactionsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionsService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.transactionsService.findOne(+id);
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {

@@ -7,23 +7,32 @@ export class Transaction {
     @PrimaryGeneratedColumn()
     public id: number
 
-    @Column({ default: 0 })
-    public senderId: number
+    @Column({ nullable: true })
+    public txid: string
 
-    @Column({ default: 0 })
-    public receiverId: number
+    @Column({ nullable: true })
+    public address: string
 
     @Column({ default: 'transfer' })
-    public type: string
+    public category: string
+
+    @Column({ nullable: true })
+    public sender: string
+
+    @Column({ default: 0 })
+    public confirmations: number
+
+    @Column({ nullable: true })
+    public receiver: string
 
     @Column({ default: 'SFR' })
     public tokenType: string
 
-    @Column({ default: 0 })
-    public tokenQuantity: string
+    @Column({ default: 0, type: 'float' })
+    public amount: number
 
-    @Column({ default: 1 })
-    public exchangeRate: string
+    @Column({ default: 1, type: 'float' })
+    public exchangeRate: number
 
     @Column({ default: 'pending' })
     public status: string

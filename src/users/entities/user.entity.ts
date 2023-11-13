@@ -19,7 +19,7 @@ export class User {
     @Column("text", { array: true, default: ['user'] })
     public roles: string[];
 
-    @Column({ default: 0 })
+    @Column({ default: '0', type: 'float' })
     public tokenBalanceSFR: number;
 
     @Column({ default: 0 })

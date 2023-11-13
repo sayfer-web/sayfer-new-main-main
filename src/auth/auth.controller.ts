@@ -19,6 +19,7 @@ export class AuthController {
     private readonly usersService: UsersService
   ) { }
 
+  @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   @Post('log-in')
   async logIn(
@@ -28,7 +29,7 @@ export class AuthController {
     const { username } = request.body
 
     const user = await this.usersService.findOne(username)
-
+    
     if(!user) throw new UnauthorizedException();
 
     console.log(user)
@@ -44,7 +45,6 @@ export class AuthController {
 
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
 
-    // httpOnly refreshTokenCookie
 
     return { token: accessToken }
   }
