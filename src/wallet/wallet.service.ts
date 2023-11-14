@@ -11,7 +11,7 @@ export class WalletService {
   async createWallet(username: string): Promise<string> {
 
     return new Promise((resolve, reject) => {
-      exec(`litecoin-cli createwallet ${username}`, (error, stdout, stderr) => {
+      exec(`litecoin-cli getnewaddress "${username}"`, (error, stdout, stderr) => {
         if (error || stderr) {
           return reject(error || stderr);
         }

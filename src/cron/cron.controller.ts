@@ -7,17 +7,17 @@ import { TransactionsService } from 'src/transactions/transactions.service';
 export class CronController {
   constructor(private readonly cronService: CronService) { }
 
-  @Interval(5000)
+  @Interval(60000)
   newTransactionsUpdater() {
     this.cronService.newTransactionsUpdater()
   }
 
-  @Interval(5000)
+  @Interval(60000)
   confirmationsUpdater() {
     this.cronService.transactionsConfirmations()
   }
 
-  @Interval(5000)
+  @Interval(60000)
   amountToSafeSender() {
     this.cronService.amountToSafeSender()
   }

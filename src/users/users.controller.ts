@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { WalletService } from 'src/wallet/wallet.service';
@@ -24,7 +24,8 @@ export class UsersController {
   @Post('register')
   async create(@Body('username') username: string, @Body('password') password: string) {
 
-    // const createdWallet = await this.walletService.createWallet(username)
+    const createdWallet = await this.walletService.createWallet(username)
+    // if(!createdWallet) return new BadRequestException('Something went wrong!')
     return await this.usersService.createNewUser(username, password);
   }
 

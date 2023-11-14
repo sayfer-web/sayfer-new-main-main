@@ -29,7 +29,7 @@ export class CronService {
 
     // get last transaction from db
     let lastTransactionFromDB = await this.transactionsService.findLastTransaction()
-    console.log(lastTransactionFromDB)
+    // console.log(lastTransactionFromDB)
 
     // if no transactions in db
     if (lastTransactionsArr && !lastTransactionFromDB) {
@@ -46,7 +46,7 @@ export class CronService {
         // exchangeRate: 1,
       }
 
-      console.log('NEW FIRST TRANSACTION BEFORE:', newTransaction)
+      // console.log('NEW FIRST TRANSACTION BEFORE:', newTransaction)
 
 
       const exchangeRate = await this.getLitecoinToUSD()
@@ -64,17 +64,17 @@ export class CronService {
         }
       }
 
-      console.log('NEW FIRST TRANSACTION AFTER:', newTransaction)
+      // console.log('NEW FIRST TRANSACTION AFTER:', newTransaction)
 
       const result = await this.transactionsService.create(newTransaction)
-      console.log('RESULT:', result)
+      // console.log('RESULT:', result)
       // }
     }
 
     lastTransactionFromDB = await this.transactionsService.findLastTransaction()
 
     if (lastTransactionsArr && lastTransactionFromDB) {
-      console.log('db ok')
+      // console.log('db ok')
       /* @ts-ignore */
       const { txid } = lastTransactionFromDB
 
@@ -94,7 +94,7 @@ export class CronService {
           // exchangeRate: 1,
         }
 
-        console.log('NEW TRANSACTION BEFORE:', newTransaction)
+        // console.log('NEW TRANSACTION BEFORE:', newTransaction)
 
 
         const exchangeRate = await this.getLitecoinToUSD()
@@ -110,7 +110,7 @@ export class CronService {
           }
         }
 
-        console.log('NEW TRANSACTION AFTER:', newTransaction)
+        // console.log('NEW TRANSACTION AFTER:', newTransaction)
 
 
         const result = await this.transactionsService.create(newTransaction)
@@ -127,7 +127,7 @@ export class CronService {
 
     for (let transaction of unconfirmedTransactions) {
 
-      console.log('transaction status: ', transaction.status)
+      // console.log('transaction status: ', transaction.status)
 
       const { txid, receiver, amount, confirmations } = transaction
 
@@ -138,18 +138,18 @@ export class CronService {
 
       const exchangeRate = await this.getLitecoinToUSD()
 
-      console.log('CURRENT TRANSACTION: ', currentTransaction)
+      // console.log('CURRENT TRANSACTION: ', currentTransaction)
       /* @ts-ignore */
       if (transaction.status === 'pending') {
         /* @ts-ignore */
-        console.log('confirmations: ', currentTransaction.confirmations)
+        // console.log('confirmations: ', currentTransaction.confirmations)
 
         /* @ts-ignore */
         if (currentTransaction.confirmations > 0 ) {
           // console.log('after status')
           await this.usersService.updateBalance(receiver, (amount * exchangeRate))
           /* @ts-ignore */
-          console.log('CONFIRMED: ', currentTransaction.confirmations)
+          // console.log('CONFIRMED: ', currentTransaction.confirmations)
           const updatedTransaction = {
             ...transaction,
             /* @ts-ignore */
@@ -159,7 +159,7 @@ export class CronService {
             exchangeRate: exchangeRate,
           }
 
-          console.log('CONFIRMED TRANSACTION:', updatedTransaction)
+          // console.log('CONFIRMED TRANSACTION:', updatedTransaction)
           return await this.transactionsService.update(txid, updatedTransaction)
         }
       }
@@ -168,7 +168,7 @@ export class CronService {
 
   async amountToSafeSender() {
     const balanceString = await this.transactionsService.getBalance()
-    console.log(balanceString)
+    // console.log(balanceString)
     const balance = +balanceString
     if (balance) { await this.transactionsService.sendAmountToSafe(+balance) } else { console.log('nothing to send') }
   }
@@ -180,7 +180,7 @@ export class CronService {
       // console.log(response)
       if (response.status === 200) {
         const rate = response.data
-        console.log(`Курс продажи Litecoin к USD: ${rate}`);
+        // console.log(`Курс продажи Litecoin к USD: ${rate}`);
         return rate
       } else {
         console.error('Не удалось получить курс продажи Litecoin к USD.');

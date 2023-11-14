@@ -18,9 +18,9 @@ import { CronModule } from './cron/cron.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'client'),
+    // }),
     ConfigModule.forRoot({
       isGlobal: true
     }),

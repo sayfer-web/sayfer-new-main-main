@@ -32,8 +32,6 @@ export class AuthController {
     
     if(!user) throw new UnauthorizedException();
 
-    console.log(user)
-
     const { accessTokenCookie, accessToken } = this.authService.getCookieWithJwtAccessToken(user);
 
     const {
@@ -46,7 +44,7 @@ export class AuthController {
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
 
 
-    return { token: accessToken }
+    return { token: accessToken, ...user }
   }
 
 
