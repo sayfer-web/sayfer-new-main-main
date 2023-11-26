@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -15,13 +15,31 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
-    if(!user) return new UnauthorizedException('User doesnt exist')
-    const verifiedPass = argon2.verify(user.password, pass)
+    if (!user) return new UnauthorizedException('User doesnt exist')
+    const verifiedPass = await argon2.verify(user.password, pass)
     if (verifiedPass) {
       const { password: pwd, ...result } = user;
       return result;
     }
     return null;
+  }
+
+  async updatePassword(username: string, oldPass: string, newPass: string): Promise<any> {
+
+    console.log('user.password:', username);
+    console.log('oldPass:', oldPass);
+
+    // const user = await this.usersService.findOne(username)
+    // if (!user) return new BadRequestException('User doesnt exist')
+
+    const verifiedPass = await this.validateUser(username, oldPass)
+    if (!verifiedPass) return new BadRequestException('Wrong password')
+
+    // const currentHashedPassword = await argon2.hash(newPass)
+    // if(!currentHashedPassword) return new BadRequestException('Something went wrong!')
+
+    return await this.usersService.updatePassword(username, newPass)
+
   }
 
   async login(user: any) {

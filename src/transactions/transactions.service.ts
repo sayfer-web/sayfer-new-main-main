@@ -37,6 +37,16 @@ export class TransactionsService {
 
   async findAll() { return await this.transactionsRepository.find() }
 
+  async findTransactionById(id: string) { 
+
+    const transaction = await this.transactionsRepository.findOneBy({ id: +id })
+
+    if(!transaction) return new BadRequestException('Doesnt exist')
+
+    return transaction
+  
+  }
+
   async findOneById(id: number) { return await this.transactionsRepository.findOneBy({ id }) }
 
   async findOneByTxId(txid: string) { return await this.transactionsRepository.findOneBy({ txid }) }

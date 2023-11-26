@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt'
 import * as argon2 from 'argon2'
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { WalletService } from 'src/wallet/wallet.service';
 
 // This should be a real class/interface representing a user entity
 // export type User = any;
@@ -15,6 +16,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private readonly walletService: WalletService,
     // private readonly filesService: FilesService
   ) { }
 
@@ -71,21 +73,28 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-
-  async createNewUser(username: string, password: string) {
+  async createNewUser(username: string, password: string, phoneNumber: string) {
     // validation
     // const { username, password, role } = createUserDto
+    const createdWallet = await this.walletService.createLtcAddress(username)
 
     const isUserExist = await this.usersRepository.findOneBy({ username })
-    if (isUserExist) throw new HttpException('User Exist', HttpStatus.BAD_REQUEST)
+    if (isUserExist) throw new BadRequestException('User Exist')
+    // if (isUserExist.phoneNumber === phoneNumber) 
+    
+    if (!phoneNumber) return new BadRequestException('Bad Number')
+    const isPhoneExist = await this.usersRepository.findOneBy({ phoneNumber })
+    if(isPhoneExist) return new BadRequestException('User with this phone number is exist')
+
     const currentHashedPassword = await argon2.hash(password)
     const newUser = {
       // id: 1,
       username,
       password: currentHashedPassword,
+      phoneNumber,
       role: '1',
       currentHashedRefreshToken: null,
-    }
+    } 
 
     return this.usersRepository.save(newUser)
     //{ username: user.username, password: user.password, role: user.role }
@@ -95,14 +104,19 @@ export class UsersService {
     const usersList: User[] = await this.usersRepository.find()
     return usersList
   }
-  
-  update(id: number, updateGameDto: UpdateUserDto) {
-    return `This action updates a #${id} game`;
+
+  async update(username: string, updateUserDto: UpdateUserDto) {
+
+    const user = await this.usersRepository.findOneBy({ username })
+    if (!user) return new BadRequestException('User doesnt exist')
+
+    return await this.usersRepository.update(user.id, { ...updateUserDto })
+
   }
-  
+
   async updateBalance(username: string, amount: number) {
     const user = await this.usersRepository.findOneBy({ username })
-    if(!user) return new BadRequestException('user doesnt exist')
+    if (!user) return new BadRequestException('user doesnt exist')
     // console.log('CHECK: ', user.tokenBalanceSFR, amount)
     const newBalance = user.tokenBalanceSFR + amount
     return await this.usersRepository.update(user.id, { tokenBalanceSFR: newBalance })
@@ -116,7 +130,7 @@ export class UsersService {
   async refreshBalance() {
 
     // cron: check user wallet current balance
-        
+
     // cron: check pending tokens
 
     // cron: if money > 0 send then 
@@ -126,10 +140,18 @@ export class UsersService {
     return 0
   }
 
+  async updatePassword(username: string, newPwd: string) {
+    const user = await this.usersRepository.findOne({ where: { username } })
+    if (!user) throw new NotFoundException('User not found')
+    const currentHashedPassword = await argon2.hash(newPwd)
+    user.password = currentHashedPassword
+    return await this.usersRepository.save(user)
+  }
+
   async editRoles(username: string, role: string) {
 
-    const user = await this.usersRepository.findOne({ where: { username }})
-    if(!user) throw new NotFoundException('User not found')
+    const user = await this.usersRepository.findOne({ where: { username } })
+    if (!user) throw new NotFoundException('User not found')
     const updatedUser = { ...user, roles: [role] }
     return await this.usersRepository.save(updatedUser)
   }

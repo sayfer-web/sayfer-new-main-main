@@ -14,7 +14,7 @@ export class NewsService {
   ) { }
 
   async create(createNewsDto: CreateNewsDto) {
-    return this.newsRepository.save({ title: createNewsDto.title, content: createNewsDto.content })
+    return this.newsRepository.save({ ...createNewsDto, createdAt: new Date().toISOString() } )
   }
 
   async findAll() {

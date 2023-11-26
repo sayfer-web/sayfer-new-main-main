@@ -12,12 +12,12 @@ export class CronController {
     this.cronService.newTransactionsUpdater()
   }
 
-  @Interval(60000)
+  @Interval(63333)
   confirmationsUpdater() {
     this.cronService.transactionsConfirmations()
   }
 
-  @Interval(60000)
+  @Interval(6150)
   amountToSafeSender() {
     this.cronService.amountToSafeSender()
   }

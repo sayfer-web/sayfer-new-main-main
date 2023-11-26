@@ -17,16 +17,13 @@ import { Interval } from '@nestjs/schedule';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly walletService: WalletService,
   ) { }
 
 
   @Post('register')
-  async create(@Body('username') username: string, @Body('password') password: string) {
-
-    const createdWallet = await this.walletService.createWallet(username)
+  async create(@Body('username') username: string, @Body('password') password: string, @Body('phoneNumber') phoneNumber: string) {
     // if(!createdWallet) return new BadRequestException('Something went wrong!')
-    return await this.usersService.createNewUser(username, password);
+    return await this.usersService.createNewUser(username, password, phoneNumber);
   }
 
   @Get()
@@ -40,9 +37,13 @@ export class UsersController {
     return this.usersService.findOne(username);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @UseGuards(JwtAuthGuard)
+  @Patch('updateProfile')
+  update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
+    /* @ts-ignore */
+    const { username } = req.user
+
+    return this.usersService.update(username, updateUserDto);
   }
 
   @Delete(':id')
@@ -50,6 +51,14 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
+
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(Role.User)
+  // @Post('/updatePassword')
+  // async editPassword(@Body('oldPwd') oldPwd: string, @Body('newPwd') newPwd: string, @Req() req: Request) {
+  //   const { username, role } = req.body
+  //   return this.usersService.updatePassword(oldPwd, newPwd, username)
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User)

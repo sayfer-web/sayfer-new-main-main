@@ -13,6 +13,12 @@ export class User {
     @Column({})
     public password: string;
 
+    @Column({ nullable: true })
+    public phoneNumber: string;
+
+    @Column({ nullable: true })
+    public email: string;
+
     // @Column({ array: true,  })
     // public roles: string;
 

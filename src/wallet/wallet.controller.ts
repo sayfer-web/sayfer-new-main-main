@@ -10,24 +10,27 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Get('getLtcAddress')
+  @Get('getLtcAddress/:username')
   async getLtcAddress(
     @Req() req: Request,
     @Param('username') username: string
   ) {
 
-    const { user } = req
-    // console.log(user)
-    // const {  } = user
-    const ltcAddressExist = await this.walletService.doesThisUserHasLtcAddress(req.user)
-    console.log('logExist: ', ltcAddressExist)
-    if (ltcAddressExist) { return { ltcAddressExist } }
-    else {
-      const ltcAddress = await this.walletService.getNewWalletAddress(req.user)
-      console.log('log: ', ltcAddress)
+    // const { user } = req
+    // // console.log(user)
+    // // const {  } = user
+    // const ltcAddressExist = await this.walletService.doesThisUserHasLtcAddress(req.user)
+    // console.log('logExist: ', ltcAddressExist)
+    // if (ltcAddressExist) { return { ltcAddressExist } }
+    // else {
+    //   const ltcAddress = await this.walletService.getNewWalletAddress(req.user)
+    //   console.log('log: ', ltcAddress)
 
-      return { ltcAddressExist: ltcAddress }
-    }
+    const result = await this.walletService.getLtcAddress(username)
+    const res = JSON.parse(result)
+    const res2 = Object.keys(res)
+    console.log(res2)
+    return { result: res2[0] }
   }
 
   @Get('list')
@@ -55,13 +58,13 @@ export class WalletController {
 
 
   @Get('addresses/:username')
-  async getAddresses(@Param('username') username: string) {
-    return this.walletService.addressesWallet(username)
+  async getLtcAddresses(@Param('username') username: string) {
+    return this.walletService.getLtcAddress(username)
   }
 
   @Get('create/:username')
   async test1(@Param('username') username: string) {
-    return this.walletService.createWallet(username)
+    return this.walletService.createLtcAddress(username)
   }
 
   @Get('test2')
@@ -82,7 +85,7 @@ export class WalletController {
   @Post(':username')
   async createWallet(@Param('username') username: string): Promise<string> {
     try {
-      const result = await this.walletService.createWallet(username);
+      const result = await this.walletService.createLtcAddress(username);
       return result;
     } catch (error) {
       throw new Error(`Error creating wallet: ${error}`);

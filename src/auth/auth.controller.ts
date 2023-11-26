@@ -27,22 +27,15 @@ export class AuthController {
     // @Cookies() cookies: any,
   ) {
     const { username } = request.body
-
     const user = await this.usersService.findOne(username)
-    
     if(!user) throw new UnauthorizedException();
 
     const { accessTokenCookie, accessToken } = this.authService.getCookieWithJwtAccessToken(user);
-
-    const {
-      cookie: refreshTokenCookie,
-      token: refreshToken
-    } = this.authService.getCookieWithJwtRefreshToken(username);
+    const { cookie: refreshTokenCookie, token: refreshToken } = this.authService.getCookieWithJwtRefreshToken(username);
 
     await this.usersService.setCurrentRefreshToken(refreshToken, username);
 
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
-
 
     return { token: accessToken, ...user }
   }
@@ -54,10 +47,21 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Post('updatePassword')
+  // @UseGuards(AuthGuard)
+  async updatePassword(@Req() request: Request, @Body('oldPwd') oldPwd: string, @Body('newPwd') newPwd: string) {
+    /* @ts-ignore */
+    const { username } = request.user
+    return await this.authService.updatePassword(username, oldPwd, newPwd)
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @UseGuards(AuthGuard)
   getProfile(@Req() req: Request) {
+
     return '1';
   }
 

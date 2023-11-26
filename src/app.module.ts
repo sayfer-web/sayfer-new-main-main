@@ -14,6 +14,7 @@ import { GamesModule } from './games/games.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './cron/cron.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { CronModule } from './cron/cron.module';
     GamesModule,
     TransactionsModule,
     CronModule,
+    TicketsModule,
     // AuthModule,
   ],
   controllers: [AppController],

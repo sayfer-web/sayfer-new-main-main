@@ -8,7 +8,7 @@ const asyncExec = promisify(exec);
 @Injectable()
 export class WalletService {
 
-  async createWallet(username: string): Promise<string> {
+  async createLtcAddress(username: string): Promise<string> {
 
     return new Promise((resolve, reject) => {
       exec(`litecoin-cli getnewaddress "${username}"`, (error, stdout, stderr) => {
@@ -80,9 +80,9 @@ export class WalletService {
     // }
   }
 
-  async addressesWallet(username: string) {
+  async getLtcAddress(username: string) {
     try {
-      const { stdout, stderr } = await asyncExec(`litecoin-cli -rpcwallet=${username} getaddressesbylabel ${username}`);
+      const { stdout, stderr } = await asyncExec(`litecoin-cli getaddressesbylabel ${username}`);
 
       if (stderr) {
         console.error(`stderr: ${stderr}`);

@@ -15,6 +15,12 @@ export class TransactionsController {
   findAllTransactions() {
     return this.transactionsService.findAll()
   }
+  
+
+  @Get('findTransactionById/:id')
+  findTransactionById(@Param('id') id: string) {
+    return this.transactionsService.findTransactionById(id)
+  }
 
   @Delete(':id')
   remove(@Param('id') id: number) {

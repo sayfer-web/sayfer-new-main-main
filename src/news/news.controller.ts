@@ -12,23 +12,23 @@ export class NewsController {
 
 
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(Role.Admin)
   @Post()
   create(@Body() createNewsDto: CreateNewsDto) {
     return this.newsService.create(createNewsDto);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(Role.Admin)
   findAll() {
     return this.newsService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.User)
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(Role.User)
   findOne(@Param('id') id: string) {
     return this.newsService.findOne(+id);
   }

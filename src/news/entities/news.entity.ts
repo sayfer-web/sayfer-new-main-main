@@ -14,7 +14,10 @@ export class News {
     @Column({ nullable: true })
     public subTitle: string;
 
-    @Column({ default: new Date().toISOString() })
+    @Column({ nullable: true, type: 'text' })
+    public coverUrl: string[];
+
+    @Column()
     public createdAt: Date;
 
     @Column({ nullable: true })
