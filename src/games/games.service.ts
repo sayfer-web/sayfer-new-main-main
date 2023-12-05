@@ -17,7 +17,7 @@ export class GamesService {
 
     const { title, content } = createGameDto
 
-    console.log(title, content)
+    // console.log(title, content)
 
     // const newGame = {
     //   title,

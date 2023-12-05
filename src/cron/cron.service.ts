@@ -19,20 +19,24 @@ export class CronService {
   async newTransactionsUpdater() {
 
     // get amount of all db's transactions
-    const transactionsCount = await this.transactionsService.findTransactionsCounter()
+    const transactionsCount = await this.transactionsService.findTransactionsCounter() || 1
 
+    // console.log('1', transactionsCount)
     // get last transactions from litecoin-cli
     const lastTransactions = await this.transactionsService.getLastTransactions(transactionsCount)
+    // console.log('2', lastTransactions)
+    
     /* @ts-ignore */
     const lastTransactionsArr = JSON.parse(lastTransactions).filter(transaction => transaction.category === 'receive')
     // console.log(`Last 100+${transactionsCount} (up to) Transactions:`, lastTransactionsArr)
+    // console.log('3', lastTransactionsArr)
 
     // get last transaction from db
     let lastTransactionFromDB = await this.transactionsService.findLastTransaction()
     // console.log(lastTransactionFromDB)
-
+    // if(!lastTransactionsArr && !lastTransactionsArr)
     // if no transactions in db
-    if (lastTransactionsArr && !lastTransactionFromDB) {
+    if (lastTransactionsArr.length > 0 && !lastTransactionFromDB) {
       /* @ts-ignore */
       const newTransaction = {
         txid: lastTransactionsArr[0].txid,
@@ -145,7 +149,7 @@ export class CronService {
         // console.log('confirmations: ', currentTransaction.confirmations)
 
         /* @ts-ignore */
-        if (currentTransaction.confirmations > 0 ) {
+        if (currentTransaction.confirmations > 0) {
           // console.log('after status')
           await this.usersService.updateBalance(receiver, (amount * exchangeRate))
           /* @ts-ignore */
@@ -170,7 +174,9 @@ export class CronService {
     const balanceString = await this.transactionsService.getBalance()
     // console.log(balanceString)
     const balance = +balanceString
-    if (balance) { await this.transactionsService.sendAmountToSafe(+balance) } else { console.log('nothing to send') }
+    if (balance) { await this.transactionsService.sendAmountToSafe(+balance) } else { 
+      // console.log('nothing to send') 
+    }
   }
 
   async getLitecoinToUSD(): Promise<number> {
@@ -183,10 +189,10 @@ export class CronService {
         // console.log(`Курс продажи Litecoin к USD: ${rate}`);
         return rate
       } else {
-        console.error('Не удалось получить курс продажи Litecoin к USD.');
+        // console.error('Не удалось получить курс продажи Litecoin к USD.');
       }
     } catch (error) {
-      console.error('Произошла ошибка при запросе к API CoinGate:', error);
+      // console.error('Произошла ошибка при запросе к API CoinGate:', error);
     }
   }
 

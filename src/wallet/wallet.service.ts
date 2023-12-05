@@ -29,10 +29,10 @@ export class WalletService {
         throw new Error(stderr);
       }
 
-      console.log(`stdout: ${stdout}`);
+      // console.log(`stdout: ${stdout}`);
       return stdout;
     } catch (error) {
-      console.error(`Error: ${error.message}`);
+      // console.error(`Error: ${error.message}`);
       // throw error;
       return 0
     }
@@ -45,16 +45,16 @@ export class WalletService {
       const { stdout, stderr } = await asyncExec(`litecoin-cli -rpcwallet=${username} getaddressesbylabel ${username}`);
 
       if (stderr) {
-        console.error(`stderr: ${stderr}`);
+        // console.error(`stderr: ${stderr}`);
         throw new Error(stderr);
       }
-      console.log(`stdout: ${stdout}`);
+      // console.log(`stdout: ${stdout}`);
 
       const resultArray = Object.keys(JSON.parse(stdout))
 
       return resultArray[0];
     } catch (error) {
-      console.error(`Error: ${error.message}`);
+      // console.error(`Error: ${error.message}`);
       return null
       // throw error;
     }
@@ -68,11 +68,11 @@ export class WalletService {
       const { stdout, stderr } = await asyncExec(`litecoin-cli -rpcwallet=${username} getnewaddress ${username}`);
 
       if (stderr) {
-        console.error(`stderr: ${stderr}`);
+        // console.error(`stderr: ${stderr}`);
         throw new Error(stderr);
       }
 
-      console.log(`stdout: ${stdout}`);
+      // console.log(`stdout: ${stdout}`);
       return stdout;
     // } catch (error) {
     //   console.error(`Error: ${error.message}`);
@@ -85,14 +85,14 @@ export class WalletService {
       const { stdout, stderr } = await asyncExec(`litecoin-cli getaddressesbylabel ${username}`);
 
       if (stderr) {
-        console.error(`stderr: ${stderr}`);
+        // console.error(`stderr: ${stderr}`);
         throw new Error(stderr);
       }
 
-      console.log(`stdout: ${stdout}`);
+      // console.log(`stdout: ${stdout}`);
       return stdout;
     } catch (error) {
-      console.error(`Error: ${error.message}`);
+      // console.error(`Error: ${error.message}`);
       throw error;
     }
   }

@@ -29,7 +29,7 @@ export class WalletController {
     const result = await this.walletService.getLtcAddress(username)
     const res = JSON.parse(result)
     const res2 = Object.keys(res)
-    console.log(res2)
+    // console.log(res2)
     return { result: res2[0] }
   }
 
@@ -37,16 +37,16 @@ export class WalletController {
   async list(@Res() response) {
     exec('litecoin-cli listwalletdir', (error, stdout, stderr) => {
       if (error) {
-        console.error(`Error: ${error.message}`);
+        // console.error(`Error: ${error.message}`);
         response.status(500).json({ error: error.message });
         return;
       }
       if (stderr) {
-        console.error(`stderr: ${stderr}`);
+        // console.error(`stderr: ${stderr}`);
         response.status(500).json({ error: stderr });
         return;
       }
-      console.log(`stdout: ${stdout}`);
+      // console.log(`stdout: ${stdout}`);
       response.status(200).json({ result: JSON.parse(stdout) }); // Отправляем результат клиенту
     });
   }
@@ -78,7 +78,7 @@ export class WalletController {
         console.error(`stderr: ${stderr}`);
         return;
       }
-      console.log(`stdout: ${stdout}`);
+      // console.log(`stdout: ${stdout}`);
     });
   }
 

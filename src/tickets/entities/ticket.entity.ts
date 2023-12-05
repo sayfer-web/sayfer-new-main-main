@@ -12,7 +12,7 @@ export class Ticket {
     phoneNumber: string;
 
     @Column()
-    investSum: number;
+    investSum: string;
 
     @Column()
     coverLetter: string;

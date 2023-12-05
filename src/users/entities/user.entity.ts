@@ -19,6 +19,12 @@ export class User {
     @Column({ nullable: true })
     public email: string;
 
+    @Column({ nullable: true })
+    public referrer: string;
+
+    @Column("text", { array: true, default: [] })
+    public referrals: string[];
+
     // @Column({ array: true,  })
     // public roles: string;
 
@@ -33,6 +39,9 @@ export class User {
 
     @Column({ default: 0 })
     public isBanned: number
+
+    @Column({ default: 'Bronze' })
+    public contractStatus: string
 
     @Exclude()
     public currentHashedRefreshToken?: string;

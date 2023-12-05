@@ -15,6 +15,9 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './cron/cron.module';
 import { TicketsModule } from './tickets/tickets.module';
+// import { RefferalModule } from './refferal/refferal.module';
+// import { RefferalsModule } from './refferals/refferals.module';
+import { ReferralsModule } from './referrals/referrals.module';
 
 @Module({
   imports: [
@@ -47,6 +50,7 @@ import { TicketsModule } from './tickets/tickets.module';
     TransactionsModule,
     CronModule,
     TicketsModule,
+    ReferralsModule,
     // AuthModule,
   ],
   controllers: [AppController],

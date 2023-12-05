@@ -21,13 +21,18 @@ export class UsersController {
 
 
   @Post('register')
-  async create(@Body('username') username: string, @Body('password') password: string, @Body('phoneNumber') phoneNumber: string) {
+  async create(@Body() createUserDto: CreateUserDto) {
     // if(!createdWallet) return new BadRequestException('Something went wrong!')
-    return await this.usersService.createNewUser(username, password, phoneNumber);
+    return await this.usersService.createNewUser(createUserDto);
   }
 
   @Get()
   findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Get('referrals/:username')
+  findReferralsByUsername(@Param('username') username: string) {
     return this.usersService.findAll();
   }
 
@@ -61,13 +66,26 @@ export class UsersController {
   // }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.User)
+  // @Roles(Role.User)
   @Post('/editRoles')
   async editRoles(
     @Req() req: Request,
   ) {
     const { username, role } = req.body
     return this.usersService.editRoles(username, role)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  // @Roles(Role.User)
+  @Post('/editContract/:status/:username')
+  async editContract(
+    // @Req() req: Request,
+    @Param('status') status: string,
+    @Param('username') username: string,
+  ) {
+    // const { username } = req.body
+    // console.log('CONTRACT USERNAME:', username)
+    return this.usersService.editContract(username, status)
   }
 
   @UseGuards(JwtAuthGuard)

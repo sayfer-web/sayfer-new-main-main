@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,7 +14,7 @@ export class NewsService {
   ) { }
 
   async create(createNewsDto: CreateNewsDto) {
-    return this.newsRepository.save({ ...createNewsDto, createdAt: new Date().toISOString() } )
+    return this.newsRepository.save({ ...createNewsDto, createdAt: new Date().toISOString() })
   }
 
   async findAll() {
@@ -22,14 +22,16 @@ export class NewsService {
   }
 
   async findOne(id: number) {
-    return this.newsRepository.findOne({ where: { id } });
+    return this.newsRepository.findOneBy({ id });
   }
 
   update(id: number, updateNewsDto: UpdateNewsDto) {
     return `This action updates a #${id} news`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} news`;
+  async remove(id: number) {
+    const newsExist = await this.newsRepository.findOneBy({ id })
+    if(!newsExist) throw new BadRequestException('Wrong id')
+    return await this.newsRepository.remove(newsExist);
   }
 }

@@ -15,7 +15,7 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
-    if (!user) return new UnauthorizedException('User doesnt exist')
+    if (!user) throw new UnauthorizedException('User doesnt exist')
     const verifiedPass = await argon2.verify(user.password, pass)
     if (verifiedPass) {
       const { password: pwd, ...result } = user;
@@ -26,19 +26,19 @@ export class AuthService {
 
   async updatePassword(username: string, oldPass: string, newPass: string): Promise<any> {
 
-    console.log('user.password:', username);
-    console.log('oldPass:', oldPass);
+    // console.log('user.password:', username);
+    // console.log('oldPass:', oldPass);
 
     // const user = await this.usersService.findOne(username)
     // if (!user) return new BadRequestException('User doesnt exist')
 
     const verifiedPass = await this.validateUser(username, oldPass)
-    if (!verifiedPass) return new BadRequestException('Wrong password')
+    if (!verifiedPass) throw new BadRequestException('Wrong password')
 
     // const currentHashedPassword = await argon2.hash(newPass)
     // if(!currentHashedPassword) return new BadRequestException('Something went wrong!')
 
-    return await this.usersService.updatePassword(username, newPass)
+    throw await this.usersService.updatePassword(username, newPass)
 
   }
 

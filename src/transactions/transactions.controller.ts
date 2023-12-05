@@ -6,16 +6,16 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(private readonly transactionsService: TransactionsService) { }
 
   // Database Transactions
-  
+
 
   @Get('findAllTransactions')
   findAllTransactions() {
     return this.transactionsService.findAll()
   }
-  
+
 
   @Get('findTransactionById/:id')
   findTransactionById(@Param('id') id: string) {
@@ -33,7 +33,7 @@ export class TransactionsController {
   getAllTransaction() {
     return this.transactionsService.getAllTransactions()
   }
-  
+
   // @UseGuards(JwtAuthGuard)
   @Get('getTransactionsAfter/:count')
   getLastTransactionsAfter(@Param('count') count: number) {

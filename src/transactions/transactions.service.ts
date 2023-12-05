@@ -37,14 +37,14 @@ export class TransactionsService {
 
   async findAll() { return await this.transactionsRepository.find() }
 
-  async findTransactionById(id: string) { 
+  async findTransactionById(id: string) {
 
     const transaction = await this.transactionsRepository.findOneBy({ id: +id })
 
-    if(!transaction) return new BadRequestException('Doesnt exist')
+    if (!transaction) return new BadRequestException('Doesnt exist')
 
     return transaction
-  
+
   }
 
   async findOneById(id: number) { return await this.transactionsRepository.findOneBy({ id }) }
@@ -71,7 +71,7 @@ export class TransactionsService {
     if (!transaction) {
       return new Error('Transaction not found');
     }
-    return await this.transactionsRepository.save({ 
+    return await this.transactionsRepository.save({
       ...transaction,
       ...updateTransactionDto
     });
@@ -89,13 +89,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec('litecoin-cli listtransactions', (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          (`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -107,13 +107,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec(`litecoin-cli listtransactions "*" ${count + 100}`, (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -121,16 +121,17 @@ export class TransactionsService {
   }
 
   async getTransactionByTxid(txid: string) {
+    if(!txid) return null
     return new Promise((resolve, reject) => {
       exec(`litecoin-cli gettransaction "${txid}"`, (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -141,13 +142,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec(`litecoin-cli getnewaddress "${username}"`, (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -159,13 +160,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec('litecoin-cli loadwallet "sayfer"', (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -176,13 +177,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec(`litecoin-cli sendtoaddress "ltc1q0ltgkleuxrv0t3gqj4yjyxzfj0zup6w69tyq95" ${amount} "" "" true`, (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -229,13 +230,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec('litecoin-cli getbalances', (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });
@@ -246,13 +247,13 @@ export class TransactionsService {
     return new Promise((resolve, reject) => {
       exec('litecoin-cli getbalance', (error, stdout, stderr) => {
         if (error) {
-          console.error(`Error: ${error.message}`);
+          // console.error(`Error: ${error.message}`);
           reject(error);
         } else if (stderr) {
-          console.error(`stderr: ${stderr}`);
+          // console.error(`stderr: ${stderr}`);
           reject(new Error(stderr));
         } else {
-          console.log(`stdout: ${stdout}`);
+          // console.log(`stdout: ${stdout}`);
           resolve(stdout);
         }
       });

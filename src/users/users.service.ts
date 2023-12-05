@@ -35,7 +35,7 @@ export class UsersService {
 
   async findOne(username: string): Promise<User | undefined> {
     const userExist = await this.usersRepository.findOne({ where: { username } })
-    if (!userExist) throw new BadRequestException('Unknown user')
+    if (!userExist) throw new BadRequestException('Unknown username or password')
     return userExist
   }
 
@@ -73,28 +73,84 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async createNewUser(username: string, password: string, phoneNumber: string) {
+  async createNewUser(createUserDto: CreateUserDto) {
     // validation
     // const { username, password, role } = createUserDto
-    const createdWallet = await this.walletService.createLtcAddress(username)
+    const createdWallet = await this.walletService.createLtcAddress(createUserDto.username)
 
-    const isUserExist = await this.usersRepository.findOneBy({ username })
-    if (isUserExist) throw new BadRequestException('User Exist')
+    const isUserExist = await this.usersRepository.findOneBy({ username: createUserDto.username })
+    if (isUserExist) throw new BadRequestException('Username exists')
     // if (isUserExist.phoneNumber === phoneNumber) 
-    
-    if (!phoneNumber) return new BadRequestException('Bad Number')
-    const isPhoneExist = await this.usersRepository.findOneBy({ phoneNumber })
-    if(isPhoneExist) return new BadRequestException('User with this phone number is exist')
 
-    const currentHashedPassword = await argon2.hash(password)
+    if (!createUserDto.phoneNumber) throw new BadRequestException('Wrong Number')
+    const isPhoneExist = await this.usersRepository.findOneBy({ phoneNumber: createUserDto.phoneNumber })
+    if (isPhoneExist) throw new BadRequestException('Phone number exists')
+
+    const currentHashedPassword = await argon2.hash(createUserDto.password)
+
+    // 
+
+    const referrals = {
+      'user1': {
+        'user2': {
+          'user3': {
+            'user4': {
+
+            }
+          }
+        },
+        'user9': {
+          'user8': {
+
+          },
+          'user12': {
+
+          }
+        },
+        'user10': {
+
+        },
+      }
+    }
+
+    // console.log(JSON.stringify(referrals))
+
+    // 
+
+    let referrer = null
+
+    if (createUserDto.referrer) {
+      // console.log(createUserDto.referrer)
+      const referrerUser = await this.usersRepository.findOneBy({ username: createUserDto.referrer })
+      // console.log(referrerUser)
+      if (referrerUser) {
+        // referrer
+        referrer = referrerUser.username
+        // referral
+        if (referrerUser.referrals) {
+          referrerUser.referrals.push(createUserDto.username)
+        } else {
+          referrerUser.referrals = [createUserDto.username]
+        }
+        await this.usersRepository.save(referrerUser)
+      } else {
+        throw new BadRequestException('Referral username does not exist')
+      }
+    }
+
+
     const newUser = {
       // id: 1,
-      username,
+      username: createUserDto.username,
       password: currentHashedPassword,
-      phoneNumber,
+      phoneNumber: createUserDto.phoneNumber,
       role: '1',
       currentHashedRefreshToken: null,
-    } 
+      referrer,
+    }
+
+    // console.log("AFTER: ", referrer, newUser)
+
 
     return this.usersRepository.save(newUser)
     //{ username: user.username, password: user.password, role: user.role }
@@ -105,10 +161,15 @@ export class UsersService {
     return usersList
   }
 
+  // async findReferralsByUsername(username: string): Promise<User> {
+  //   const users: User = await this.usersRepository.findOneBy({ username })
+  //   return usersList
+  // }
+
   async update(username: string, updateUserDto: UpdateUserDto) {
 
     const user = await this.usersRepository.findOneBy({ username })
-    if (!user) return new BadRequestException('User doesnt exist')
+    if (!user) throw new BadRequestException('User doesnt exist')
 
     return await this.usersRepository.update(user.id, { ...updateUserDto })
 
@@ -155,5 +216,14 @@ export class UsersService {
     const updatedUser = { ...user, roles: [role] }
     return await this.usersRepository.save(updatedUser)
   }
+
+  async editContract(username: string, status: string) {
+
+    const user = await this.usersRepository.findOne({ where: { username } })
+    if (!user) throw new NotFoundException('User not found')
+    const updatedUser = { ...user, contractStatus: status }
+    return await this.usersRepository.update(user.id, { contractStatus: status })
+  }
+
 
 }

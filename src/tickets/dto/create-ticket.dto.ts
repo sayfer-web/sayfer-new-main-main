@@ -1,7 +1,8 @@
-import { IsEmail, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateTicketDto {
     @IsString()
+    @IsNotEmpty()
     name: string;
 
     @IsEmail()
@@ -10,8 +11,8 @@ export class CreateTicketDto {
     @IsString()
     phoneNumber: string;
 
-    @IsNumber()
-    investSum: number;
+    @IsString()
+    investSum: string;
 
     @IsString()
     coverLetter: string;
